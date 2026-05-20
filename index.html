@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>花朵 Baby Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="linen" data-lang="en">
+
+<div class="header">
+  <div class="hrow">
+    <div>
+      <h1>花朵</h1>
+      <div class="header-sub" id="baby-age">8 days old · May 20, 2026</div>
+    </div>
+    <div class="hrow-btns">
+      <button class="theme-btn" id="lang-btn">中文</button>
+      <button class="theme-btn" id="theme-btn">🎨 <span id="tname">Linen</span></button>
+    </div>
+  </div>
+  <div class="tabs" id="tab-bar">
+    <div class="tab active" data-tab="stats">Stats</div>
+    <div class="tab" data-tab="pattern">Pattern</div>
+    <div class="tab" data-tab="log">Log</div>
+    <div class="tab" data-tab="growth">Growth</div>
+    <div class="tab" data-tab="parents">Parents</div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="pane active" id="pane-stats"></div>
+  <div class="pane" id="pane-pattern"></div>
+  <div class="pane" id="pane-log"></div>
+  <div class="pane" id="pane-growth"></div>
+  <div class="pane" id="pane-parents"></div>
+</div>
+
+<!-- Upload via /admin page (not built yet) -->
+<div class="toast" id="toast"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
