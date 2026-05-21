@@ -5,24 +5,30 @@ import { render as renderGrowth }  from './growth.js';
 import { render as renderParent }  from './parent.js';
 import { t, fmtDayLabel } from './i18n.js';
 
-function renderAll() {
-  renderStats();
-  renderPattern();
-  renderLog();
-  renderGrowth();
-  renderParent();
-  updateTabLabels();
+// Cached so language toggle can re-render without re-fetching
+let appData = null;
+
+function renderAll(data) {
+  renderStats(data);
+  renderPattern(data);
+  renderLog(data);
+  renderGrowth(data);
+  renderParent(data);
+  updateTabLabels(data);
 }
 
-function updateTabLabels() {
+function updateTabLabels(data) {
   const tabs = document.querySelectorAll('.tab');
   const keys = ['stats', 'pattern', 'log', 'growth', 'parents'];
   tabs.forEach((tab, i) => { tab.textContent = t(keys[i]); });
 
-  // Update header age line
+  // Compute age from dob → today
+  const dob      = new Date(data.baby.dob);
+  const daysOld  = Math.floor((Date.now() - dob) / 86400000);
   const daysOldFn = t('daysOld');
   if (typeof daysOldFn === 'function') {
-    document.getElementById('baby-age').textContent = daysOldFn(8) + ' · ' + fmtDayLabel(8) + ', 2026';
+    document.getElementById('baby-age').textContent =
+      daysOldFn(daysOld) + ' · ' + fmtDayLabel(daysOld) + ', 2026';
   }
 }
 
@@ -55,7 +61,7 @@ document.getElementById('lang-btn').addEventListener('click', () => {
   document.body.dataset.lang = next;
   document.getElementById('lang-btn').textContent = next === 'en' ? '中文' : 'EN';
 
-  renderAll();
+  if (appData) renderAll(appData);
 
   // Re-activate the current tab
   const activeTab = document.querySelector('.tab.active');
@@ -81,5 +87,20 @@ tabBar.addEventListener('click', e => {
   document.getElementById('pane-' + id).classList.add('active');
 });
 
-// ===== Initial render =====
-renderAll();
+// ===== Boot =====
+async function init() {
+  try {
+    const res = await fetch('/api/data');
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    appData = await res.json();
+    renderAll(appData);
+  } catch (err) {
+    console.error('Failed to load data:', err);
+    document.querySelector('.content').innerHTML =
+      `<div style="padding:40px;text-align:center;color:var(--mut);font-size:14px">
+         ⚠️ Could not load data<br><small>${err.message}</small>
+       </div>`;
+  }
+}
+
+init();

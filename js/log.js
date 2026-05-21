@@ -1,8 +1,8 @@
-import { LOG } from './data.js';
 import { t, fmtDayLabel } from './i18n.js';
 
-export function render() {
+export function render(data) {
   const pane = document.getElementById('pane-log');
+  const LOG  = data.log;
 
   const daysHtml = LOG.map(day => {
     const partial = day.partial ? ` ${t('partial')}` : '';

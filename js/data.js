@@ -11,8 +11,8 @@ export const WEEKLY = [
   { day: 16, label: '16', feeds: 9,  formulaMl: 90, poops: 5, pees: 10, sleepH: 14.0 },
   { day: 17, label: '17', feeds: 8,  formulaMl: 0,  poops: 4, pees: 8,  sleepH: 14.0 },
   { day: 18, label: '18', feeds: 7,  formulaMl: 30, poops: 4, pees: 7,  sleepH: 15.5 },
-  { day: 19, label: '19', feeds: 8,  formulaMl: 0,  poops: 3, pees: 8,  sleepH: 14.7 },
-  { day: 20, label: '20', feeds: 3,  formulaMl: 0,  poops: 1, pees: 3,  sleepH: 7.2,  partial: true },
+  { day: 19, label: '19', feeds: 8,  formulaMl: 0,  poops: 3, pees: 8,  sleepH: 14.8 },
+  { day: 20, label: '20', feeds: 7,  formulaMl: 0,  poops: 2, pees: 7,  sleepH: 12.5, partial: true },
 ];
 
 // ===== Activity pattern (May 15–20) =====
@@ -68,16 +68,16 @@ export const PATTERN = [
   },
   {
     label: 'May 19', day: 7,
-    sleeps:  [[1.0, 4.75], [5.75, 8.25], [9.25, 11.4], [13.5, 15.3], [17.5, 18.2], [19.2, 21.75], [22.75, 24]],
+    sleeps:  [[1.0, 4.75], [5.75, 8.08], [9.08, 11.42], [13.5, 15.33], [17.5, 18.25], [19.25, 22.75], [23.75, 24]],
     feeds:   [
       {h: 0.22, dur: 0.5, formula: null},
-      {h: 5.0, dur: 0.5, formula: null},
-      {h: 8.5, dur: 0.5, formula: null},
+      {h: 5.0,  dur: 0.5, formula: null},
+      {h: 8.33, dur: 0.5, formula: null},
       {h: 11.67, dur: 0.5, formula: null},
       {h: 12.75, dur: 0.5, formula: null},
       {h: 15.58, dur: 0.5, formula: null},
-      {h: 18.47, dur: 0.5, formula: null},
-      {h: 22.0, dur: 0.5, formula: null},
+      {h: 18.5,  dur: 0.5, formula: null},
+      {h: 23.0,  dur: 0.5, formula: null},
     ],
     skin: [{h: 16.0, dur: 1.25}],
     markers: [{h: 16.0, emoji: '🛁'}],         // bath within skin window
@@ -85,11 +85,15 @@ export const PATTERN = [
   {
     label: 'May 20', day: 8,
     partial: true,
-    sleeps:  [[0, 2.6], [3.6, 6.05], [7.05, 9.15]],
+    sleeps:  [[0, 2.58], [3.58, 6.05], [7.05, 9.15], [10.15, 10.5], [13.25, 14.18], [15.18, 16.72], [17.72, 20.25]],
     feeds:   [
-      {h: 2.83, dur: 0.5, formula: null},
-      {h: 6.3, dur: 0.5, formula: null},
-      {h: 9.4, dur: 0.5, formula: null},
+      {h: 2.83,  dur: 0.5, formula: null},
+      {h: 6.3,   dur: 0.5, formula: null},
+      {h: 9.4,   dur: 0.5, formula: null},
+      {h: 12.5,  dur: 0.5, formula: null},
+      {h: 14.43, dur: 0.5, formula: null},
+      {h: 16.97, dur: 0.5, formula: null},
+      {h: 20.5,  dur: 0.5, formula: null},
     ],
     skin: [{h: 10.5, dur: 1.75}],
     markers: [{h: 10.5, emoji: '🛁'}],         // bath within skin window
@@ -110,22 +114,26 @@ export const LOG = [
   {
     date: '2026-05-20', label: 'May 20', day: 8, partial: true,
     events: [
-      { time: '2:50',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '2:50',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
       { time: '6:18',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
-      { time: '9:24',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '9:24',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '12:30', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '14:26', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '16:58', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '20:30', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
     ],
   },
   {
     date: '2026-05-19', label: 'May 19', day: 7,
     events: [
       { time: '0:13',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
-      { time: '5:00',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
-      { time: '8:30',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
-      { time: '11:40', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
-      { time: '12:45', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
-      { time: '15:35', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
-      { time: '18:28', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
-      { time: '22:00', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '5:00',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '8:20',  tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '11:40', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '12:45', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '15:35', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
+      { time: '18:30', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💩'}, {cls:'td', text:'💧'}] },
+      { time: '23:00', tags: [{cls:'tf', text:'🤱 fed'}, {cls:'td', text:'💧'}] },
     ],
   },
   {

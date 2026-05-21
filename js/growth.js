@@ -1,10 +1,11 @@
-import { BABY, WEIGHT } from './data.js';
 import { el, mkSvg } from './svg.js';
 import { linearRegression } from './predict.js';
 import { t, fmtDayLabel } from './i18n.js';
 
-export function render() {
-  const pane = document.getElementById('pane-growth');
+export function render(data) {
+  const pane   = document.getElementById('pane-growth');
+  const BABY   = data.baby;
+  const WEIGHT = data.weight;
   const latest = WEIGHT[WEIGHT.length - 1];
   const changeG = Math.round((latest.weight - BABY.birthWeight) * 1000);
   const sign = changeG >= 0 ? '+' : '';
@@ -76,7 +77,7 @@ export function render() {
     </div>
   `;
 
-  renderWeightChart();
+  renderWeightChart(BABY, WEIGHT);
 }
 
 function niceStep(range, maxTicks) {
@@ -86,7 +87,7 @@ function niceStep(range, maxTicks) {
   return Math.ceil(raw);
 }
 
-function renderWeightChart() {
+function renderWeightChart(BABY, WEIGHT) {
   const container = document.getElementById('weight-chart');
   const W = 310, H = 180;
   const X0 = 40, X1 = 268;

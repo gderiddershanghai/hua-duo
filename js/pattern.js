@@ -1,9 +1,9 @@
-import { PATTERN } from './data.js';
 import { el, mkSvg } from './svg.js';
 import { t, fmtDayLabel } from './i18n.js';
 
-export function render() {
-  const pane = document.getElementById('pane-pattern');
+export function render(data) {
+  const pane    = document.getElementById('pane-pattern');
+  const PATTERN = data.pattern;
 
   // Compute summary stats from complete days
   const complete = PATTERN.filter(d => !d.partial);
@@ -54,10 +54,10 @@ export function render() {
     </div>
   `;
 
-  renderChart();
+  renderChart(PATTERN);
 }
 
-function renderChart() {
+function renderChart(PATTERN) {
   const X0 = 48, CW = 238;
   const PH = CW / 24;            // pixels per hour
   const RH = 34, BH = 18, BT = 8, TP = 4;

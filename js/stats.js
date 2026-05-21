@@ -1,9 +1,9 @@
-import { WEEKLY } from './data.js';
 import { barChart } from './svg.js';
 import { t } from './i18n.js';
 
-export function render() {
-  const pane = document.getElementById('pane-stats');
+export function render(data) {
+  const pane   = document.getElementById('pane-stats');
+  const WEEKLY = data.weekly;
 
   // Compute weekly averages from complete days only
   const complete = WEEKLY.filter(d => !d.partial);

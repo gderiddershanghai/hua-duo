@@ -1,10 +1,10 @@
-import { PARENT_WEIGHT } from './data.js';
 import { el, mkSvg } from './svg.js';
 import { linearRegression } from './predict.js';
 import { t, fmtDayLabel } from './i18n.js';
 
-export function render() {
-  const pane = document.getElementById('pane-parents');
+export function render(data) {
+  const pane         = document.getElementById('pane-parents');
+  const PARENT_WEIGHT = data.parentWeight;
   pane.innerHTML = `
     <div class="section">
       <div class="slabel">${t('weightJourney')}</div>
