@@ -45,9 +45,12 @@ function renderParent(containerId, data, avatarSrc) {
     predLabel = t('notStarted');
   }
 
+  const initial = data.name[0] || '?';
   container.innerHTML = `
     <div class="parent-header">
-      <img src="${avatarSrc}" alt="${data.name}" class="parent-avatar">
+      <img src="${avatarSrc}" alt="${data.name}" class="parent-avatar"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="parent-avatar-fallback" style="display:none">${initial}</div>
       <div>
         <h3>${data.name}</h3>
         <div class="sub">${predLabel}</div>

@@ -5,12 +5,13 @@ const S = {
     // Header
     daysOld: d => `${d} days old`,
     // Stats tab
-    weekAvg: 'Week averages · May 16–20',
+    weekly: 'Weekly',
+    weekAvg: 'Week averages',
     feedsDay: 'feeds / day', sleepDay: 'sleep / day',
     poopDay: 'poop / day', peeDay: 'pee / day',
     formulaNote: (ml) => `Total formula this week: ${ml} ml`,
-    partialNote: 'May 20 is a partial day',
-    dailyTrends: 'Daily trends · May 16–20',
+    partialNote: 'Today is partial',
+    dailyTrends: 'Daily trends',
     feeds: 'Feeds', sleepH: 'Sleep (h)', poop: 'Poop', pee: 'Pee',
     // Pattern tab
     activityPattern: 'Activity pattern',
@@ -48,12 +49,13 @@ const S = {
     // Header
     daysOld: d => `出生${d}天`,
     // Stats tab
-    weekAvg: '周平均 · 5月16–20日',
+    weekly: '本周',
+    weekAvg: '周平均',
     feedsDay: '喂奶 / 天', sleepDay: '睡眠 / 天',
     poopDay: '大便 / 天', peeDay: '小便 / 天',
     formulaNote: (ml) => `本周奶粉总量: ${ml} ml`,
-    partialNote: '5月20日为不完整数据',
-    dailyTrends: '每日趋势 · 5月16–20日',
+    partialNote: '今日数据不完整',
+    dailyTrends: '每日趋势',
     feeds: '喂奶', sleepH: '睡眠 (h)', poop: '大便', pee: '小便',
     // Pattern tab
     activityPattern: '活动规律',

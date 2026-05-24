@@ -4,8 +4,10 @@ export function render(data) {
   const pane = document.getElementById('pane-log');
   const LOG  = data.log;
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   const daysHtml = LOG.map(day => {
-    const partial = day.partial ? ` ${t('partial')}` : '';
+    const partial = (day.partial && day.date === todayStr) ? ` ${t('partial')}` : '';
     const entries = day.events.map(entry => {
       const tagsHtml = entry.tags
         .map(e => `<span class="tag ${e.cls}">${e.text}</span>`)

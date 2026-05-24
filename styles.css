@@ -33,11 +33,11 @@
   --bg:#0e1822; --surf:#182330; --surf2:#223040;
   --acc:#85aee0; --acc-soft:#233250;
   --text:#d8e5f5; --mut:#5e7a9e; --bdr:#253848;
-  --feed-bg:#352a18; --feed-fg:#f0be70;
+  --feed-bg:#7a4e10; --feed-fg:#ffc860;
   --slp-bg:#2a4270; --slp-fg:#80a8e8;
   --diaper-bg:#182e22; --diaper-fg:#70c890;
   --note-bg:#2a2818; --note-fg:#c8b870;
-  --skin-bg:#3a2038; --skin-fg:#e090d0;
+  --skin-bg:#6e1a68; --skin-fg:#f088d8;
 }
 
 /* ===== RESET & BASE ===== */
@@ -235,4 +235,33 @@ body {
 .progress-bar-fill {
   height: 100%; border-radius: 6px;
   background: var(--acc); transition: width 0.3s;
+}
+
+/* ===== STATS TOGGLE ===== */
+.toggle-row {
+  display: flex; gap: 6px; margin-bottom: 16px;
+}
+.toggle-btn {
+  flex: 1; padding: 8px 0; border: 1px solid var(--bdr);
+  border-radius: 20px; background: var(--surf2); color: var(--mut);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.toggle-btn.active {
+  background: var(--acc); color: var(--bg); border-color: var(--acc);
+}
+
+/* ===== HEADER LOGO ===== */
+.header-title-row { display: flex; align-items: center; gap: 10px; }
+.header-logo {
+  height: 40px; width: 40px; border-radius: 10px;
+  object-fit: cover; flex-shrink: 0;
+}
+
+/* ===== PARENT AVATAR FALLBACK ===== */
+.parent-avatar-fallback {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--acc-soft); color: var(--acc);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; flex-shrink: 0;
 }
