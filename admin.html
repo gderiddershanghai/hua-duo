@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>花朵 Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-header {
+      background: var(--surf); border-bottom: 1px solid var(--bdr);
+      padding: 16px 18px; display: flex; align-items: center; gap: 12px;
+    }
+    .admin-header h1 { font-size: 18px; font-weight: 800; }
+    .admin-header a { font-size: 12px; color: var(--mut); text-decoration: none; margin-left: auto; }
+    .admin-content { padding: 16px; }
+
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.7px;
+      text-transform: uppercase; color: var(--mut); margin: 0 0 10px;
+    }
+    .card {
+      background: var(--surf); border: 1px solid var(--bdr);
+      border-radius: 14px; padding: 16px; margin-bottom: 16px;
+    }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--mut); margin-bottom: 4px; }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 9px 12px; border: 1px solid var(--bdr);
+      border-radius: 8px; font-size: 14px; background: var(--bg); color: var(--text);
+      font-family: inherit;
+    }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700;
+      cursor: pointer; border: none; gap: 6px;
+    }
+    .btn-primary { background: var(--acc); color: #fff; width: 100%; }
+    .btn-secondary { background: var(--surf2); color: var(--text); border: 1px solid var(--bdr); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+
+    /* Preview table */
+    .preview { margin-top: 16px; display: none; }
+    .preview h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .preview-day { margin-bottom: 16px; }
+    .preview-day-label { font-size: 12px; font-weight: 700; color: var(--mut); margin-bottom: 6px; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .tbl th { text-align: left; padding: 6px 8px; color: var(--mut); font-weight: 600;
+               border-bottom: 1px solid var(--bdr); }
+    .tbl td { padding: 6px 8px; border-bottom: 1px solid var(--surf2); }
+    .tbl tr:last-child td { border-bottom: none; }
+    .tbl input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
+    .tbl input[type=text] { padding: 2px 6px; width: 100%; border: 1px solid var(--bdr);
+                             border-radius: 4px; background: var(--bg); color: var(--text); }
+    .uncertain { color: var(--acc); font-size: 10px; }
+
+    .status { font-size: 13px; color: var(--mut); margin-top: 8px; min-height: 20px; }
+    .status.ok  { color: #4a9e6e; }
+    .status.err { color: #c0392b; }
+
+    .tabs-mini { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 1px solid var(--bdr); }
+    .tab-mini {
+      padding: 8px 14px; font-size: 12px; font-weight: 600; cursor: pointer;
+      color: var(--mut); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    }
+    .tab-mini.active { color: var(--acc); border-bottom-color: var(--acc); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body data-theme="linen" data-lang="en">
+
+<div class="admin-header">
+  <h1>🛠 Admin</h1>
+  <a href="/">← Back to app</a>
+</div>
+
+<div class="admin-content">
+
+  <!-- ===== PARSE NOTES ===== -->
+  <div class="section-title">Parse Yuesao Notes</div>
+  <div class="card">
+    <div class="tabs-mini">
+      <div class="tab-mini active" data-panel="panel-image">📷 Upload Photo</div>
+      <div class="tab-mini" data-panel="panel-text">✏️ Enter Text</div>
+    </div>
+
+    <!-- Image upload -->
+    <div class="tab-panel active" id="panel-image">
+      <div class="field">
+        <label>Photo of yuesao notes</label>
+        <input type="file" id="image-file" accept="image/*" capture="environment">
+      </div>
+      <button class="btn btn-primary" id="parse-image-btn">Parse Photo</button>
+    </div>
+
+    <!-- Text input -->
+    <div class="tab-panel" id="panel-text">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="text-date" value="">
+      </div>
+      <div class="field">
+        <label>Description (Chinese or English)</label>
+        <textarea id="text-input" placeholder="e.g. 2:50 fed, peed. 6:18 fed, peed. 9:24 fed, pooped, peed."></textarea>
+      </div>
+      <button class="btn btn-primary" id="parse-text-btn">Parse Text</button>
+    </div>
+
+    <div class="status" id="parse-status"></div>
+
+    <!-- Preview -->
+    <div class="preview" id="preview">
+      <h3>Review before saving</h3>
+      <div id="preview-days"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="confirm-btn">✓ Save all events</button>
+        <button class="btn btn-secondary" id="discard-btn">Discard</button>
+      </div>
+      <div class="status" id="save-status"></div>
+    </div>
+  </div>
+
+  <!-- ===== ADD WEIGHT ===== -->
+  <div class="section-title">Add Weight</div>
+  <div class="card">
+    <div class="tabs-mini">
+      <div class="tab-mini active" data-panel="panel-baby-wt">🍼 Baby</div>
+      <div class="tab-mini" data-panel="panel-parent-wt">👨‍👩 Parent</div>
+    </div>
+
+    <div class="tab-panel active" id="panel-baby-wt">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="baby-wt-date">
+      </div>
+      <div class="field">
+        <label>Weight (kg)</label>
+        <input type="number" id="baby-wt-kg" step="0.01" placeholder="4.55">
+      </div>
+      <div class="field">
+        <label>Length cm <span style="font-weight:400;color:var(--mut)">(optional)</span></label>
+        <input type="number" id="baby-wt-cm" step="0.1" placeholder="51">
+      </div>
+      <button class="btn btn-primary" id="save-baby-wt-btn">Save Baby Weight</button>
+      <div class="status" id="baby-wt-status"></div>
+    </div>
+
+    <div class="tab-panel" id="panel-parent-wt">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="parent-wt-date">
+      </div>
+      <div class="field">
+        <label>Person</label>
+        <select id="parent-wt-person">
+          <option value="dad">Ginger (dad)</option>
+          <option value="mom">华夏 (mom)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Weight (kg)</label>
+        <input type="number" id="parent-wt-kg" step="0.1" placeholder="90.0">
+      </div>
+      <button class="btn btn-primary" id="save-parent-wt-btn">Save Parent Weight</button>
+      <div class="status" id="parent-wt-status"></div>
+    </div>
+  </div>
+
+</div><!-- /admin-content -->
+
+<script>
+// ===== Tabs =====
+document.querySelectorAll('.tabs-mini').forEach(tabBar => {
+  tabBar.querySelectorAll('.tab-mini').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const parent = tab.closest('.card');
+      parent.querySelectorAll('.tab-mini').forEach(t => t.classList.remove('active'));
+      parent.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+    });
+  });
+});
+
+// ===== Pre-fill today's date =====
+const today = new Date().toISOString().slice(0, 10);
+document.getElementById('text-date').value   = today;
+document.getElementById('baby-wt-date').value = today;
+document.getElementById('parent-wt-date').value = today;
+
+// ===== Parsed days state =====
+let parsedDays = [];
+
+function setStatus(id, msg, type = '') {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'status ' + type;
+}
+
+// ===== Parse image =====
+document.getElementById('parse-image-btn').addEventListener('click', async () => {
+  const file = document.getElementById('image-file').files[0];
+  if (!file) { setStatus('parse-status', 'Please select an image first.', 'err'); return; }
+
+  setStatus('parse-status', '⏳ Parsing with GPT-4o…');
+  document.getElementById('parse-image-btn').disabled = true;
+
+  try {
+    const form = new FormData();
+    form.append('image', file);
+    const res  = await fetch('/api/parse/image', { method: 'POST', body: form });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error);
+    showPreview(json.days);
+    setStatus('parse-status', `✓ Found ${json.days.reduce((s,d)=>s+d.events.length,0)} events across ${json.days.length} day(s).`, 'ok');
+  } catch (err) {
+    setStatus('parse-status', '✗ ' + err.message, 'err');
+  } finally {
+    document.getElementById('parse-image-btn').disabled = false;
+  }
+});
+
+// ===== Parse text =====
+document.getElementById('parse-text-btn').addEventListener('click', async () => {
+  const text = document.getElementById('text-input').value.trim();
+  const date = document.getElementById('text-date').value;
+  if (!text) { setStatus('parse-status', 'Please enter some text first.', 'err'); return; }
+
+  setStatus('parse-status', '⏳ Parsing with GPT-4o…');
+  document.getElementById('parse-text-btn').disabled = true;
+
+  try {
+    const res  = await fetch('/api/parse/text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, date }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error);
+    showPreview(json.days);
+    setStatus('parse-status', `✓ Found ${json.days.reduce((s,d)=>s+d.events.length,0)} events.`, 'ok');
+  } catch (err) {
+    setStatus('parse-status', '✗ ' + err.message, 'err');
+  } finally {
+    document.getElementById('parse-text-btn').disabled = false;
+  }
+});
+
+// ===== Render preview table =====
+function showPreview(days) {
+  parsedDays = days;
+  const container = document.getElementById('preview-days');
+  container.innerHTML = '';
+
+  days.forEach((day, di) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'preview-day';
+    wrap.innerHTML = `<div class="preview-day-label">${day.date}</div>`;
+
+    const table = document.createElement('table');
+    table.className = 'tbl';
+    table.innerHTML = `
+      <thead><tr>
+        <th>✓</th><th>Time</th><th>🤱</th><th>Formula</th><th>💩</th><th>💧</th><th>Note</th>
+      </tr></thead>
+      <tbody></tbody>`;
+    const tbody = table.querySelector('tbody');
+
+    day.events.forEach((e, ei) => {
+      const tr = document.createElement('tr');
+      tr.dataset.di = di;
+      tr.dataset.ei = ei;
+      tr.innerHTML = `
+        <td><input type="checkbox" class="ev-include" checked></td>
+        <td><input type="text" class="ev-time" value="${e.time || ''}" style="width:52px">
+            ${e.uncertain ? '<span class="uncertain">?</span>' : ''}</td>
+        <td><input type="checkbox" class="ev-bf" ${e.breastfed ? 'checked' : ''}></td>
+        <td><input type="text" class="ev-fml" value="${e.formula_ml || ''}" style="width:44px"></td>
+        <td><input type="checkbox" class="ev-poop" ${e.poop ? 'checked' : ''}></td>
+        <td><input type="checkbox" class="ev-pee"  ${e.pee  ? 'checked' : ''}></td>
+        <td><input type="text" class="ev-note" value="${e.note || ''}"></td>`;
+      tbody.appendChild(tr);
+    });
+
+    wrap.appendChild(table);
+    container.appendChild(wrap);
+  });
+
+  document.getElementById('preview').style.display = 'block';
+  document.getElementById('save-status').textContent = '';
+}
+
+// ===== Confirm / save =====
+document.getElementById('confirm-btn').addEventListener('click', async () => {
+  const rows = document.querySelectorAll('#preview-days tr[data-di]');
+  const toSave = [];
+
+  rows.forEach(tr => {
+    if (!tr.querySelector('.ev-include').checked) return;
+    const di = Number(tr.dataset.di);
+    toSave.push({
+      date:       parsedDays[di].date,
+      time:       tr.querySelector('.ev-time').value.trim(),
+      breastfed:  tr.querySelector('.ev-bf').checked,
+      formula_ml: Number(tr.querySelector('.ev-fml').value) || 0,
+      poop:       tr.querySelector('.ev-poop').checked,
+      pee:        tr.querySelector('.ev-pee').checked,
+      note:       tr.querySelector('.ev-note').value.trim(),
+    });
+  });
+
+  if (!toSave.length) { setStatus('save-status', 'Nothing selected.', 'err'); return; }
+
+  setStatus('save-status', `⏳ Saving ${toSave.length} events…`);
+  document.getElementById('confirm-btn').disabled = true;
+
+  try {
+    for (const evt of toSave) {
+      const res = await fetch('/api/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(evt),
+      });
+      if (!res.ok) { const j = await res.json(); throw new Error(j.error); }
+    }
+    setStatus('save-status', `✓ Saved ${toSave.length} events.`, 'ok');
+    document.getElementById('preview').style.display = 'none';
+    parsedDays = [];
+  } catch (err) {
+    setStatus('save-status', '✗ ' + err.message, 'err');
+  } finally {
+    document.getElementById('confirm-btn').disabled = false;
+  }
+});
+
+document.getElementById('discard-btn').addEventListener('click', () => {
+  document.getElementById('preview').style.display = 'none';
+  parsedDays = [];
+  setStatus('parse-status', '');
+});
+
+// ===== Baby weight =====
+document.getElementById('save-baby-wt-btn').addEventListener('click', async () => {
+  const date      = document.getElementById('baby-wt-date').value;
+  const weight_kg = document.getElementById('baby-wt-kg').value;
+  const length_cm = document.getElementById('baby-wt-cm').value;
+  if (!date || !weight_kg) { setStatus('baby-wt-status', 'Date and weight required.', 'err'); return; }
+
+  try {
+    const res = await fetch('/api/weight/baby', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, weight_kg: Number(weight_kg), length_cm: length_cm ? Number(length_cm) : null }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j.error);
+    setStatus('baby-wt-status', `✓ Saved ${weight_kg} kg on ${date}.`, 'ok');
+    document.getElementById('baby-wt-kg').value = '';
+    document.getElementById('baby-wt-cm').value = '';
+  } catch (err) {
+    setStatus('baby-wt-status', '✗ ' + err.message, 'err');
+  }
+});
+
+// ===== Parent weight =====
+document.getElementById('save-parent-wt-btn').addEventListener('click', async () => {
+  const date      = document.getElementById('parent-wt-date').value;
+  const person    = document.getElementById('parent-wt-person').value;
+  const weight_kg = document.getElementById('parent-wt-kg').value;
+  if (!date || !weight_kg) { setStatus('parent-wt-status', 'Date and weight required.', 'err'); return; }
+
+  try {
+    const res = await fetch('/api/weight/parent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, person, weight_kg: Number(weight_kg) }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j.error);
+    setStatus('parent-wt-status', `✓ Saved ${weight_kg} kg for ${person} on ${date}.`, 'ok');
+    document.getElementById('parent-wt-kg').value = '';
+  } catch (err) {
+    setStatus('parent-wt-status', '✗ ' + err.message, 'err');
+  }
+});
+</script>
+</body>
+</html>

@@ -215,11 +215,12 @@ function computeWeight(babyWeight) {
 
 // ===== PARENT WEIGHT =====
 
-function computeParents(parentWeight) {
+function computeParents(dadWeight, momWeight) {
+  const datasets = { dad: dadWeight, mom: momWeight };
   const result = {};
   for (const [key, cfg] of Object.entries(PARENT_CONFIG)) {
-    const entries = parentWeight
-      .filter(r => r.person === key)
+    const entries = (datasets[key] || [])
+      .slice()
       .sort((a, b) => a.date.localeCompare(b.date))
       .map(r => ({ day: dateToDay(r.date), label: `May ${new Date(r.date).getDate()}`, weight: r.weight_kg }));
 
@@ -230,7 +231,7 @@ function computeParents(parentWeight) {
 
 // ===== Main export =====
 
-export function getAllData(events, babyWeight, parentWeight, skin) {
+export function getAllData(events, babyWeight, dadWeight, momWeight, skin) {
   const pattern = computePattern(events, skin);
   return {
     baby:         BABY,
@@ -238,6 +239,6 @@ export function getAllData(events, babyWeight, parentWeight, skin) {
     pattern,
     weight:       computeWeight(babyWeight),
     log:          computeLog(events),
-    parentWeight: computeParents(parentWeight),
+    parentWeight: computeParents(dadWeight, momWeight),
   };
 }

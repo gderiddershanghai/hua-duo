@@ -81,21 +81,37 @@ export function appendBabyWeight(entry) {
   );
 }
 
-// ===== Parent weight =====
+// ===== Dad weight =====
 
-export function readParentWeight() {
-  return parseCsv('parent_weight.csv').map(r => ({
+export function readDadWeight() {
+  return parseCsv('dad_weight.csv').map(r => ({
     date:      r.date,
-    person:    r.person,
     weight_kg: Number(r.weight_kg),
   }));
 }
 
-export function appendParentWeight(entry) {
+export function appendDadWeight(entry) {
   appendCsvRow(
-    'parent_weight.csv',
-    ['date', 'person', 'weight_kg'],
-    [entry.date, entry.person, entry.weight_kg],
+    'dad_weight.csv',
+    ['date', 'weight_kg'],
+    [entry.date, entry.weight_kg],
+  );
+}
+
+// ===== Mom weight =====
+
+export function readMomWeight() {
+  return parseCsv('mom_weight.csv').map(r => ({
+    date:      r.date,
+    weight_kg: Number(r.weight_kg),
+  }));
+}
+
+export function appendMomWeight(entry) {
+  appendCsvRow(
+    'mom_weight.csv',
+    ['date', 'weight_kg'],
+    [entry.date, entry.weight_kg],
   );
 }
 
