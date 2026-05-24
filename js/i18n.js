@@ -5,8 +5,9 @@ const S = {
     // Header
     daysOld: d => `${d} days old`,
     // Stats tab
+    sevenDays: '7 Days',
     weekly: 'Weekly',
-    weekAvg: 'Week averages',
+    weekAvg: '7-day averages',
     feedsDay: 'feeds / day', sleepDay: 'sleep / day',
     poopDay: 'poop / day', peeDay: 'pee / day',
     formulaNote: (ml) => `Total formula this week: ${ml} ml`,
@@ -49,8 +50,9 @@ const S = {
     // Header
     daysOld: d => `出生${d}天`,
     // Stats tab
-    weekly: '本周',
-    weekAvg: '周平均',
+    sevenDays: '近7天',
+    weekly: '按周',
+    weekAvg: '7天平均',
     feedsDay: '喂奶 / 天', sleepDay: '睡眠 / 天',
     poopDay: '大便 / 天', peeDay: '小便 / 天',
     formulaNote: (ml) => `本周奶粉总量: ${ml} ml`,

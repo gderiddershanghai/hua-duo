@@ -36,9 +36,11 @@ function dateToDay(dateStr) {
   return Math.round((date - dob) / 86400000);
 }
 
-// A day is considered "partial at the end" if no event falls at or after 22:00.
-function isPartialDay(dayEvents) {
-  return dayEvents.every(e => timeToH(e.time) < 22);
+// A day is "partial" only if it is today (still in progress).
+// Past days are always treated as complete regardless of last event time.
+function isPartialDay(dayEvents, date) {
+  const today = new Date().toISOString().slice(0, 10);
+  return date === today;
 }
 
 // ===== Sleep block computation =====
@@ -100,7 +102,7 @@ function computePattern(events, skin) {
 
   return dates.map(date => {
     const dayEvents = events.filter(e => e.date === date);
-    const partial   = isPartialDay(dayEvents);
+    const partial   = isPartialDay(dayEvents, date);
 
     const feedTimes = dayEvents
       .filter(e => e.breastfed || e.formula_ml > 0)
@@ -163,7 +165,7 @@ function computeWeekly(events, pattern) {
     const sleepH    = r1(p.sleeps.reduce((s, [a, b]) => s + (b - a), 0));
     const dayNum    = new Date(dateStr).getDate();
 
-    const row = { day: dayNum, label: String(dayNum), feeds, formulaMl, poops, pees, sleepH };
+    const row = { day: dayNum, daySinceBirth: p.day, label: String(dayNum), feeds, formulaMl, poops, pees, sleepH };
     if (p.partial) row.partial = true;
     return row;
   });
@@ -176,7 +178,7 @@ function computeLog(events) {
 
   return dates.map(date => {
     const dayEvents = events.filter(e => e.date === date);
-    const partial   = isPartialDay(dayEvents);
+    const partial   = isPartialDay(dayEvents, date);
 
     const evts = dayEvents.map(e => {
       const tags = [];

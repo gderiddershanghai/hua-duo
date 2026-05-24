@@ -334,13 +334,10 @@ body {
   .content {
     margin-left: 200px;
     padding: 32px 40px 60px;
+    max-width: 1080px;
   }
 
-  /* 4-column grids on desktop */
-  .chart-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
+  /* Stats cards 4-across, charts stay 2×2 */
   .stats {
     grid-template-columns: repeat(4, 1fr);
   }
