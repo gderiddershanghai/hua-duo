@@ -332,9 +332,9 @@ body {
   }
 
   .content {
-    margin-left: 200px;
-    padding: 32px 40px 60px;
+    margin-left: max(200px, calc(50vw - 440px));
     max-width: 1080px;
+    padding: 32px 40px 60px;
   }
 
   /* Stats cards 4-across, charts stay 2×2 */
