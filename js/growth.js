@@ -138,23 +138,16 @@ function renderWeightChart(BABY, WEIGHT) {
     s.appendChild(label);
   }
 
-  // WHO percentile lines
-  const WHO = [
-    { label: 'P75', d0: 3.70, d14: 3.90 },
-    { label: 'P90', d0: 4.00, d14: 4.20 },
-    { label: 'P97', d0: 4.30, d14: 4.55 },
-  ];
-  WHO.forEach(p => {
-    const dEnd = p.d0 + (p.d14 - p.d0) * (xMax / 14);
-    s.appendChild(el('polyline', {
-      points: `${xOf(0)},${yOf(p.d0)} ${xOf(xMax)},${yOf(dEnd)}`,
-      'stroke-width': p.label === 'P90' ? 1.5 : 1,
-      'clip-path': 'url(#wc)',
-    }, 'cp'));
-    const label = el('text', { x: X1 + 6, y: yOf(dEnd) + 3, 'font-size': 8 }, 'ct');
-    label.textContent = p.label;
-    s.appendChild(label);
-  });
+  // WHO P90 reference line only
+  const p90 = { label: 'P90', d0: 4.00, d14: 4.20 };
+  const p90End = p90.d0 + (p90.d14 - p90.d0) * (xMax / 14);
+  s.appendChild(el('polyline', {
+    points: `${xOf(0)},${yOf(p90.d0)} ${xOf(xMax)},${yOf(p90End)}`,
+    'stroke-width': 0.8, 'clip-path': 'url(#wc)',
+  }, 'cp'));
+  const p90lbl = el('text', { x: X1 + 6, y: yOf(p90End) + 3, 'font-size': 8 }, 'ct');
+  p90lbl.textContent = 'P90';
+  s.appendChild(p90lbl);
 
   // Prediction line
   const regPts = WEIGHT.map(w => ({ x: w.day, y: w.weight }));
