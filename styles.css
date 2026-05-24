@@ -341,4 +341,18 @@ body {
   .stats {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  /* Larger text on desktop */
+  body          { font-size: 16px; }
+  .header h1    { font-size: 24px; }
+  .header-sub   { font-size: 14px; }
+  .tab          { font-size: 14px; }
+  .slabel       { font-size: 12px; }
+  .stat-num     { font-size: 26px; }
+  .stat-desc    { font-size: 12px; }
+  .chart-card h3 { font-size: 15px; }
+  .pat-stat-val { font-size: 20px; }
+  .pat-stat-lbl { font-size: 11px; }
+  .log-time     { font-size: 14px; }
+  .tag          { font-size: 13px; }
 }
