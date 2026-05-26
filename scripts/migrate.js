@@ -38,25 +38,26 @@ async function createSchema() {
       formula_ml  INTEGER     NOT NULL DEFAULT 0,
       poop        BOOLEAN     NOT NULL DEFAULT false,
       pee         BOOLEAN     NOT NULL DEFAULT false,
-      note        TEXT        NOT NULL DEFAULT ''
+      note        TEXT        NOT NULL DEFAULT '',
+      UNIQUE (date, time)
     )`;
   await sql`
     CREATE TABLE IF NOT EXISTS baby_weight (
       id         SERIAL PRIMARY KEY,
-      date       DATE          NOT NULL,
+      date       DATE          NOT NULL UNIQUE,
       weight_kg  NUMERIC(5,2) NOT NULL,
       length_cm  NUMERIC(5,1)
     )`;
   await sql`
     CREATE TABLE IF NOT EXISTS dad_weight (
       id         SERIAL PRIMARY KEY,
-      date       DATE          NOT NULL,
+      date       DATE          NOT NULL UNIQUE,
       weight_kg  NUMERIC(5,2) NOT NULL
     )`;
   await sql`
     CREATE TABLE IF NOT EXISTS mom_weight (
       id         SERIAL PRIMARY KEY,
-      date       DATE          NOT NULL,
+      date       DATE          NOT NULL UNIQUE,
       weight_kg  NUMERIC(5,2) NOT NULL
     )`;
   await sql`
@@ -65,7 +66,8 @@ async function createSchema() {
       date       DATE NOT NULL,
       start_time TIME NOT NULL,
       end_time   TIME NOT NULL,
-      bath       BOOLEAN NOT NULL DEFAULT false
+      bath       BOOLEAN NOT NULL DEFAULT false,
+      UNIQUE (date, start_time)
     )`;
   console.log('Tables ready.');
 }
@@ -80,7 +82,8 @@ async function migrateEvents() {
       INSERT INTO events (date, time, breastfed, formula_ml, poop, pee, note)
       VALUES (${r.date}, ${r.time}, ${r.breastfed === '1'},
               ${Number(r.formula_ml) || 0}, ${r.poop === '1'},
-              ${r.pee === '1'}, ${r.note || ''})`;
+              ${r.pee === '1'}, ${r.note || ''})
+      ON CONFLICT (date, time) DO NOTHING`;
   }
   console.log(`  ✓ ${rows.length} events`);
 }
@@ -91,7 +94,8 @@ async function migrateBabyWeight() {
   for (const r of rows) {
     await sql`
       INSERT INTO baby_weight (date, weight_kg, length_cm)
-      VALUES (${r.date}, ${Number(r.weight_kg)}, ${r.length_cm ? Number(r.length_cm) : null})`;
+      VALUES (${r.date}, ${Number(r.weight_kg)}, ${r.length_cm ? Number(r.length_cm) : null})
+      ON CONFLICT (date) DO NOTHING`;
   }
   console.log(`  ✓ ${rows.length} baby weight entries`);
 }
@@ -102,7 +106,8 @@ async function migrateDadWeight() {
   for (const r of rows) {
     await sql`
       INSERT INTO dad_weight (date, weight_kg)
-      VALUES (${r.date}, ${Number(r.weight_kg)})`;
+      VALUES (${r.date}, ${Number(r.weight_kg)})
+      ON CONFLICT (date) DO NOTHING`;
   }
   console.log(`  ✓ ${rows.length} dad weight entries`);
 }
@@ -113,7 +118,8 @@ async function migrateMomWeight() {
   for (const r of rows) {
     await sql`
       INSERT INTO mom_weight (date, weight_kg)
-      VALUES (${r.date}, ${Number(r.weight_kg)})`;
+      VALUES (${r.date}, ${Number(r.weight_kg)})
+      ON CONFLICT (date) DO NOTHING`;
   }
   console.log(`  ✓ ${rows.length} mom weight entries`);
 }
@@ -124,7 +130,8 @@ async function migrateSkin() {
   for (const r of rows) {
     await sql`
       INSERT INTO skin (date, start_time, end_time, bath)
-      VALUES (${r.date}, ${r.start_time}, ${r.end_time}, ${r.bath === '1'})`;
+      VALUES (${r.date}, ${r.start_time}, ${r.end_time}, ${r.bath === '1'})
+      ON CONFLICT (date, start_time) DO NOTHING`;
   }
   console.log(`  ✓ ${rows.length} skin entries`);
 }
