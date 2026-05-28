@@ -183,9 +183,10 @@ function computeLog(events) {
     const evts = dayEvents.map(e => {
       const tags = [];
       if (e.breastfed || e.formula_ml > 0) {
-        let text = '🤱 fed';
-        if (e.formula_ml > 0) text += ` + ${e.formula_ml}ml`;
-        if (e.note) text = `🤱 ${e.note} + ${e.formula_ml}ml`;
+        const parts = [];
+        if (e.note)          parts.push(e.note);
+        if (e.formula_ml > 0) parts.push(`${e.formula_ml}ml`);
+        const text = parts.length ? `🤱 ${parts.join(' + ')}` : '🤱 fed';
         tags.push({ cls: 'tf', text });
       }
       if (e.poop) tags.push({ cls: 'td', text: '💩' });

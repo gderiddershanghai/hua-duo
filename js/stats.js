@@ -10,8 +10,11 @@ export function render(data) {
   const complete7 = WEEKLY7.filter(d => !d.partial);
   const n7 = complete7.length || 1;
   const avg7 = key => (complete7.reduce((s, d) => s + d[key], 0) / n7).toFixed(1);
-  const formula7 = WEEKLY7.reduce((s, d) => s + d.formulaMl, 0);
-  const range7 = WEEKLY7.length
+  const formula7 = complete7.reduce((s, d) => s + d.formulaMl, 0);
+  const range7 = complete7.length
+    ? `May ${complete7[0].label}–${complete7[complete7.length - 1].label}`
+    : '';
+  const chartRange7 = WEEKLY7.length
     ? `May ${WEEKLY7[0].label}–${WEEKLY7[WEEKLY7.length - 1].label}`
     : '';
 
@@ -95,7 +98,7 @@ export function render(data) {
         </div>
       </div>
       <div class="section">
-        <div class="slabel">${t('dailyTrends')} · ${range7}</div>
+        <div class="slabel">${t('dailyTrends')} · ${chartRange7}</div>
         <div class="chart-grid">
           <div class="chart-card" id="chart-feeds"><h3>🤱 ${t('feeds')}</h3></div>
           <div class="chart-card" id="chart-sleep"><h3>😴 ${t('sleepH')}</h3></div>
