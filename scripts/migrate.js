@@ -69,6 +69,12 @@ async function createSchema() {
       bath       BOOLEAN NOT NULL DEFAULT false,
       UNIQUE (date, start_time)
     )`;
+  // Ensure unique constraints exist on pre-existing tables
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS events_date_time_key      ON events(date, time)`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS baby_weight_date_key       ON baby_weight(date)`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS dad_weight_date_key        ON dad_weight(date)`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS mom_weight_date_key        ON mom_weight(date)`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS skin_date_start_time_key   ON skin(date, start_time)`;
   console.log('Tables ready.');
 }
 
