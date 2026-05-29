@@ -77,17 +77,20 @@ function computeSleepBlocks(feedTimes, skinWindows, partial) {
     }
   }
 
-  // Invert awake windows to get sleep blocks
+  // Invert awake windows to get sleep blocks (cap each block at 5h — newborns don't sleep longer)
+  const MAX_SLEEP_BLOCK = 5;
   const sleeps = [];
   let cursor = 0;
   for (const [awakeS, awakeE] of merged) {
     if (awakeS - cursor >= MIN_SLEEP) {
-      sleeps.push([r2(cursor), r2(awakeS)]);
+      const start = Math.max(cursor, awakeS - MAX_SLEEP_BLOCK);
+      sleeps.push([r2(start), r2(awakeS)]);
     }
     cursor = awakeE;
   }
   if (!partial && 24 - cursor >= MIN_SLEEP) {
-    sleeps.push([r2(cursor), 24]);
+    const tailStart = Math.max(cursor, 24 - MAX_SLEEP_BLOCK);
+    sleeps.push([r2(tailStart), 24]);
   }
 
   return sleeps;
