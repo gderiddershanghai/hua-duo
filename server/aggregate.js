@@ -16,7 +16,7 @@ const PARENT_CONFIG = {
 // May 15 was the first partial day — yuesao started recording at 13:00.
 const PATTERN_START_DATE = '2026-05-16';
 
-const FEED_DUR  = 0.5;   // 30 min per feed
+const FEED_DUR  = 0.667; // 40 min per feed
 const SETTLE    = 0.25;  // 15 min awake after feed / after skin
 const MIN_SLEEP = 0.15;  // ~9 min — skip blocks shorter than this
 

@@ -82,14 +82,14 @@ async function createSchema() {
 
 async function migrateEvents() {
   const rows = parseCsv('events.csv');
-  console.log(`Migrating ${rows.length} events...`);
+  console.log(`Migrating ${rows.length} events (full overwrite)...`);
+  await sql`TRUNCATE TABLE events RESTART IDENTITY`;
   for (const r of rows) {
     await sql`
       INSERT INTO events (date, time, breastfed, formula_ml, poop, pee, note)
       VALUES (${r.date}, ${r.time}, ${r.breastfed === '1'},
               ${Number(r.formula_ml) || 0}, ${r.poop === '1'},
-              ${r.pee === '1'}, ${r.note || ''})
-      ON CONFLICT (date, time) DO NOTHING`;
+              ${r.pee === '1'}, ${r.note || ''})`;
   }
   console.log(`  ✓ ${rows.length} events`);
 }
@@ -101,7 +101,7 @@ async function migrateBabyWeight() {
     await sql`
       INSERT INTO baby_weight (date, weight_kg, length_cm)
       VALUES (${r.date}, ${Number(r.weight_kg)}, ${r.length_cm ? Number(r.length_cm) : null})
-      ON CONFLICT (date) DO NOTHING`;
+      ON CONFLICT (date) DO UPDATE SET weight_kg = EXCLUDED.weight_kg, length_cm = EXCLUDED.length_cm`;
   }
   console.log(`  ✓ ${rows.length} baby weight entries`);
 }
